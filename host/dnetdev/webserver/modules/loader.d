@@ -63,10 +63,6 @@ struct ModLoader(T) if (is(T == struct)) {
 			return null;
 		}
 	}
-
-	void searchLocations(string[] locations...) {
-		searchLocations_ = locations;
-	}
 	
 	void addSearchLocations(string[] locations...) {
 		searchLocations_ ~= locations;

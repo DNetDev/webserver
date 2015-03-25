@@ -21,5 +21,74 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
- module dnetdev.webserver.configs.defs;
+module dnetdev.webserver.configs.defs;
 
+enum ServerLogLevel {
+	Debug,
+	Info,
+	Notice,
+	Warn,
+	Error,
+	Critical,
+	Alert,
+	Emergency
+}
+
+struct ServerConfigs {
+	string rootDirectory;
+
+	VirtualHost primaryHost;
+	VirtualHost[] virtualHosts;
+
+	string[string] modulesToLoad;
+
+	string errorLogFile;
+	ServerLogLevel logLevel;
+
+	string[][string] otherDirectives;
+
+	package {
+		import dnetdev.webserver.modules.defs;
+		import dnetdev.webserver.modules.loader;
+
+		ModLoader!WebServerModuleInterface testModuleLoader;
+		size_t[string] moduleToid;
+		bool searchLocationsSetup = false;
+	}
+
+	bool moduleLoadable(string name) {
+		import dnetdev.webserver.runners.config : configFile;
+		import std.path : buildPath, dirName;
+
+		assert(name in modulesToLoad);
+
+		if (!searchLocationsSetup) {
+			string globalPath = dirName(configFile);
+			testModuleLoader.searchLocations = [rootDirectory, buildPath(rootDirectory, "config"), buildPath(rootDirectory, "configs"), globalPath, buildPath(globalPath, "config"), buildPath(globalPath, "configs")];
+			searchLocationsSetup = true;
+		}
+
+		try {
+			size_t id = testModuleLoader.load(modulesToLoad[name]);
+			moduleToid[name] = id;
+
+			return true;
+		} catch (Exception e) {
+			return false;
+		}
+	}
+}
+
+struct VirtualHost {
+	ushort port;
+	string domain;
+
+	string admin;
+	string name;
+
+	string[ushort] errorMessage;
+	string[ushort] localErrorRedirects;
+	string[ushort] externalErrorRedirects;
+
+	string[][string] otherDirectives;
+}
