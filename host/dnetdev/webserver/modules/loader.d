@@ -44,6 +44,12 @@ struct ModLoader(T) if (is(T == struct)) {
 		searchLocations_ = locations;
 	}
 
+	~this() {
+		foreach(k, loc; loaders) {
+			loc.unload;
+		}
+	}
+
 @property {
 		void searchLocations(string[] locations) {
 			searchLocations_ = locations;
