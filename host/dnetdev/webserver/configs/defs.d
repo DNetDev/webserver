@@ -38,12 +38,10 @@ struct ServerConfigs {
 	string rootDirectory;
 
 	VirtualHost primaryHost;
+	// requires a copy of directories/files that are not specific to primary host to each virtual hosts as they are global
 	VirtualHost[] virtualHosts;
 
 	string[string] modulesToLoad;
-
-	string errorLogFile;
-	ServerLogLevel logLevel;
 
 	string[][string] otherDirectives;
 
@@ -91,4 +89,17 @@ struct VirtualHost {
 	string[ushort] externalErrorRedirects;
 
 	string[][string] otherDirectives;
+
+	string errorLogFile;
+	ServerLogLevel logLevel;
+
+	string overrides; // TODO: fix type
+	string requires; // TODO: fix type
+
+	string[] options; // TODO: fix type
+
+	VirtualHost*[string] directories;
+	VirtualHost*[string] files;
+
+	string directoryIndexFile;
 }
