@@ -1,0 +1,44 @@
+{
+	"name": "dnetdev_webserver",
+	"description": "A minimal D application.",
+	"copyright": "Copyright © 2015, rikki",
+	"authors": ["rikki"],
+	"sourcePaths": [],
+	"targetType": "none",
+	"subPackages": [
+		{
+			"name": "host",
+			"sourcePaths": ["host"],
+			"importPaths": ["host"],
+			"targetType": "library",
+			"dependencies": {
+    			"derelict-util": ">=1.9.1",
+				"vibe-d": ">=0.7.23-rc.2",
+				"daemonize": ">=0.1.0",
+				"colorize": ">=1.0.5",
+				"apache_httpd_format": ">=0.1.1"
+			},
+			"versions": ["VibeCustomMain"]
+		},
+		{
+			"name": "modulebase",
+			"sourcePaths": ["modulebase"],
+			"importPaths": ["modulebase"],
+			"targetType": "dynamicLibrary",
+			"dependencies": {
+				"vibe-d": ">=0.7.23-rc.2",
+				"daemonize": ">=0.1.0",
+				"colorize": ">=1.0.5"
+			},
+		},
+		{
+			"name": "main",
+			"sourceFiles": ["main.d"],
+			"sourcePaths": [],
+			"targetType": "executable",
+			"dependencies": {
+    			"dnetdev_webserver:host": "*"
+			}
+		}
+	]
+}
