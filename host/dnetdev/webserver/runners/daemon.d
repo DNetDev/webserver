@@ -22,6 +22,10 @@
  * SOFTWARE.
  */
 module dnetdev.webserver.runners.daemon;
+version(OSX) {
+    pragma(msg, "daemonize does not support OSX");
+} else:
+
 import dnetdev.webserver.runners.independent : initializeByVibeIndepenent;
 import dnetdev.webserver.runners.config;
 import daemonize.d;

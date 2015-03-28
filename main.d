@@ -50,31 +50,39 @@ int main(string[] args) {
 			
 			return 0; // ran correctly
 		} else if (runMode == RunMode.Daemon) {
-			import dnetdev.webserver.runners.daemon : initializeAsDaemon;
-			initializeAsDaemon;
-			return 0;
-		} else if (runMode == RunMode.DaemonDo) {
-			import dnetdev.webserver.runners.daemon;
-			
-			try {
-				if (daemonDo == "reload")
-					clientSend(logger, ReloadConfigs);
-				else if (daemonDo == "stop")
-					clientSend(logger, Signal.Stop);
-				else if (daemonDo == "uninstall") {
-					version(Windows) {
-						daemonClient.uninstall(logger);
-					} else {
-						assert(0); // should NEVER be hit
-					}
-				} else
-					assert(0); // should NEVER be hit
-			} catch(Exception e) {
-				cwriteln("Could not send signal to service: ".color(fg.red).style(mode.bold), e.msg);
-				return -2;
+		    version(OSX) {
+		        assert(0); // should NEVER be hit
+		    } else {
+                import dnetdev.webserver.runners.daemon : initializeAsDaemon;
+                initializeAsDaemon;
+                return 0;
 			}
-			
-			return 0;
+		} else if (runMode == RunMode.DaemonDo) {
+		    version(OSX) {
+		        assert(0); // should NEVER be hit
+		    } else {
+                import dnetdev.webserver.runners.daemon;
+            
+                try {
+                    if (daemonDo == "reload")
+                        clientSend(logger, ReloadConfigs);
+                    else if (daemonDo == "stop")
+                        clientSend(logger, Signal.Stop);
+                    else if (daemonDo == "uninstall") {
+                        version(Windows) {
+                            daemonClient.uninstall(logger);
+                        } else {
+                            assert(0); // should NEVER be hit
+                        }
+                    } else
+                        assert(0); // should NEVER be hit
+                        
+                    return 0;
+		    	} catch(Exception e) {
+				    cwriteln("Could not send signal to service: ".color(fg.red).style(mode.bold), e.msg);
+				    return -2;
+			    }
+		    }
 		} else if (runMode == RunMode.FastCGI) {
 			import dnetdev.webserver.runners.fastcgi : initializeAsFastCGIClient;
 			initializeAsFastCGIClient;

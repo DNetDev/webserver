@@ -35,62 +35,82 @@ bool cliArgs(string[] cliArgs) {
 	
 	// IRK does null terminator work on all platforms?
 	try {
-		readOption("mode", &runMode, "The mode to run this process in. \0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0 " ~ 
-			"0 = Independent runner \0\0\0\0\0\0\0\0\0\0\0\0\0\0 " ~
-			"1 = Daemon \0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0 " ~
-			"2 = Daemon send signal \0\0\0\0\0\0\0\0\0\0\0\0\0\0 " ~
-			"3 = FastCGI client ");
+	    version(OSX) {
+	        readOption("mode", &runMode, "The mode to run this process in. \0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0 " ~ 
+                "0 = Independent runner \0\0\0\0\0\0\0\0\0\0\0\0\0\0 " ~
+                "3 = FastCGI client ");
+	    } else {
+            readOption("mode", &runMode, "The mode to run this process in. \0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0 " ~ 
+                "0 = Independent runner \0\0\0\0\0\0\0\0\0\0\0\0\0\0 " ~
+                "1 = Daemon \0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0 " ~
+                "2 = Daemon send signal \0\0\0\0\0\0\0\0\0\0\0\0\0\0 " ~
+                "3 = FastCGI client ");
+		}
 	} catch(Exception e) {
-		cwriteln("Mode must be between 0 and 3, inclusive.".color(fg.red).style(mode.bold) ~ "\n");
+	    version(OSX) {
+		    cwriteln("Mode must be 0 or 3, inclusive.".color(fg.red).style(mode.bold) ~ "\n");
+		} else {
+		    cwriteln("Mode must be between 0 and 3, inclusive.".color(fg.red).style(mode.bold) ~ "\n");
+		}
 		return false;
 	}
 	
-	if (runMode > 3) {
-		cwriteln("Mode must be between 0 and 3, inclusive.".color(fg.red).style(mode.bold) ~ "\n");
+	bool runModeSecondCheck;
+	version(OSX) {
+	    runModeSecondCheck = runMode == 1 || runMode == 2;
+	}
+	
+	if (runMode > 3 || runModeSecondCheck) {
+	    version(OSX) {
+		    cwriteln("Mode must be 0 or 3.".color(fg.red).style(mode.bold) ~ "\n");
+		} else {
+		    cwriteln("Mode must be between 0 and 3, inclusive.".color(fg.red).style(mode.bold) ~ "\n");
+		}
 		return false;
 	}
 	
 	
 	/// Daemon User/Group
-	
-	
-	readOption("daemon-user", &asUser, "The user the daemon will drop to");
-	readOption("daemon-group", &asGroup, "The user id the daemon will drop to");
-
-	version(Windows) {
-		enum DaemonActionAddition = "uninstall = Uninstalls windows daemon ";
+	version(OSX) {
 	} else {
-		enum DaemonActionAddition = "";
-	}
+        readOption("daemon-user", &asUser, "The user the daemon will drop to");
+        readOption("daemon-group", &asGroup, "The user id the daemon will drop to");
 
-	if (readOption("daemon-action", &daemonDo, "Sends a signal to a daemon. \0\0\0\0\0\0\0\0 " ~ 
-			DaemonActionAddition ~
-			"stop \0 \0\0 = Stops the daemon \0 \0 \0 " ~ 
-			"reload \0\0 = Reload configuration"
-			) || runMode == RunMode.DaemonDo) {
-		import std.string : toLower;
-		daemonDo = daemonDo.toLower;
-		
-		version(Windows) {
-		} else {
-			if (daemonDo == "uninstall") {
-				daemonDo = "_uninstall";
-			}
-		}
-		
-		if (daemonDo == "stop" || daemonDo == "reload" || daemonDo == "uninstall") {
-		} else {
-			if (runMode == RunMode.DaemonDo && daemonDo == "")
-				cwriteln("--daemon-action is only available and required when --mode=2 is specified.".color(fg.red).style(mode.bold) ~ "\n");
-			else {
-				version(Windows) {
-					cwriteln("--daemon-action supports only stop, reload and uninstall.".color(fg.red).style(mode.bold));
-				} else {
-					cwriteln("--daemon-action supports only stop and reload.".color(fg.red).style(mode.bold));
-				}
-			}
-			return false;
-		}
+        version(Windows) {
+            enum DaemonActionAddition = "uninstall = Uninstalls windows daemon ";
+        } else {
+            enum DaemonActionAddition = "";
+        }
+
+        if (readOption("daemon-action", &daemonDo, "Sends a signal to a daemon. \0\0\0\0\0\0\0\0 " ~ 
+                DaemonActionAddition ~
+                "stop \0 \0\0 = Stops the daemon \0 \0 \0 " ~ 
+                "reload \0\0 = Reload configuration"
+                ) || runMode == RunMode.DaemonDo) {
+            import std.string : toLower;
+            daemonDo = daemonDo.toLower;
+        
+            version(Windows) {
+            } else {
+                if (daemonDo == "uninstall") {
+                    daemonDo = "_uninstall";
+                }
+            }
+        
+            if (daemonDo == "stop" || daemonDo == "reload" || daemonDo == "uninstall") {
+            } else {
+                if (runMode == RunMode.DaemonDo && daemonDo == "")
+                    cwriteln("--daemon-action is only available and required when --mode=2 is specified.".color(fg.red).style(mode.bold) ~ "\n");
+                else {
+                    version(Windows) {
+                        cwriteln("--daemon-action supports only stop, reload and uninstall.".color(fg.red).style(mode.bold));
+                    } else {
+                        cwriteln("--daemon-action supports only stop and reload.".color(fg.red).style(mode.bold));
+                    }
+                }
+                return false;
+            }
+        }
 	}
 	
 	

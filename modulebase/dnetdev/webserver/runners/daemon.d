@@ -25,6 +25,9 @@
  *     SOFTWARE.
  */
 module dnetdev.webserver.runners.daemon;
+version(OSX) {
+    pragma(msg, "daemonize does not support OSX");
+} else:
 import dnetdev.webserver.modulebase.internal.binder;
 import daemonize.d;
 
