@@ -24,11 +24,19 @@
 module dnetdev.webserver.runners.independent;
 
 export void initializeByVibeIndepenent() {
+	import dnetdev.webserver.configs;
+	import dnetdev.webserver.runners.gc;
 	import vibe.core.core : runEventLoop;
 
 	// load config
+	flattenConfig;
+	ServerConfigs* config = getSystemConfig();
 
-	// bunch of other stuff here
+	// foreach unique ip/port pair
+	//  start listeners
 
+	// module system preEventLoop call
+
+	forceGCCleanup;
 	runEventLoop;
 }

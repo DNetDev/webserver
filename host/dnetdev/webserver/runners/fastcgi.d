@@ -24,11 +24,19 @@
 module dnetdev.webserver.runners.fastcgi;
 
 export void initializeAsFastCGIClient() {
+
+	import dnetdev.webserver.configs;
+	import dnetdev.webserver.runners.gc;
 	import vibe.core.core : runEventLoop;
-
-	// load config
-
-	// bunch of other stuff here
 	
+	// load config
+	flattenConfig;
+	ServerConfigs* config = getSystemConfig();
+	
+	// start STDIO communication mechanism
+	
+	// module system preEventLoop call
+	
+	forceGCCleanup;
 	runEventLoop;
 }

@@ -8,6 +8,9 @@ int main(string[] args) {
 	import dnetdev.webserver.modules.loader;
 	import dnetdev.webserver.modules.defs;
 
+	import core.memory : GC;
+	GC.disable; // make sure we do not do any hidden collections
+
 	bool doDefaultSetup;
 	if (args.length > 1 && args[1].length > 1 && args[1][0] != '-') {
 		try {
