@@ -23,6 +23,14 @@
  */
 module dnetdev.webserver.configs.defs;
 
+package {
+	ServerConfigs systemConfig;
+}
+
+ServerConfigs* getSystemConfig() {
+	return &systemConfig;
+}
+
 enum ServerLogLevel {
 	Debug,
 	Info,
@@ -56,9 +64,14 @@ struct ServerConfigs {
 
 	bool moduleLoadable(string name) {
 		import dnetdev.webserver.runners.config : configFile;
+		import dnetdev.webserver.modules.dside : getInternalModuleNames;
 		import std.path : buildPath, dirName;
+		import std.algorithm : canFind;
 
 		assert(name in modulesToLoad);
+
+		if (getInternalModuleNames().canFind(name))
+			return true;
 
 		if (!searchLocationsSetup) {
 			string globalPath = dirName(configFile);
@@ -102,4 +115,7 @@ struct VirtualHost {
 	VirtualHost*[string] files;
 
 	string directoryIndexFile;
+
+	string[string] defineValues;
+	string[] definedNames;
 }
