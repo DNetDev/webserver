@@ -41,7 +41,9 @@ struct ModLoader(T) if (is(T == struct)) {
 	}
 
 	this(string[] locations...) {
+		import dnetdev.webserver.modules.dside : indexsForDfuncs;
 		searchLocations_ = locations;
+		counter = indexsForDfuncs.keys.length;
 	}
 
 	~this() {
@@ -50,7 +52,7 @@ struct ModLoader(T) if (is(T == struct)) {
 		}
 	}
 
-@property {
+	@property {
 		void searchLocations(string[] locations) {
 			searchLocations_ = locations;
 		}
@@ -63,9 +65,18 @@ struct ModLoader(T) if (is(T == struct)) {
 			return loaders.keys;
 		}
 
-		LoaderSharedLibrary!T opIndex(size_t id) {
+		size_t internalModuleIdCount() {
+			import dnetdev.webserver.modules.dside : indexsForDfuncs;
+			return indexsForDfuncs.keys.length;
+		}
+
+		T* opIndex(size_t id) {
+			import dnetdev.webserver.modules.dside : indexsForDfuncs, dfuncs;
+
 			if (id in loaders)
-				return loaders[id];	
+				return &loaders[id].me;	
+			else if (id in indexsForDfuncs)
+				return &dfuncs[indexsForDfuncs[id]];
 			return null;
 		}
 	}
