@@ -62,6 +62,12 @@ struct ServerConfigs {
 		bool searchLocationsSetup = false;
 	}
 
+	@property {
+		ModLoader!WebServerModuleInterface modules() {
+			return testModuleLoader;
+		}
+	}
+
 	bool moduleLoadable(string name) {
 		import dnetdev.webserver.runners.config : configFile;
 		import dnetdev.webserver.modules.dside : getInternalModuleNames;

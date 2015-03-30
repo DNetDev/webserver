@@ -28,8 +28,16 @@ module dnetdev.webserver.runners.gc;
  * 
  * Make sure the GC was already disabled in e.g. main.
  */
-void forceGCCleanup() {
+export void forceGCCleanup() {
+	import dnetdev.webserver.configs.defs;
 	import core.memory : GC;
+
+	ServerConfigs* config = getSystemConfig();
+	auto modules = config.modules;
+
+	foreach(id; modules.validIds) { //TODO: change to range!
+		modules[id].preGCCleanup();
+	}
 
 	GC.collect; // forces a collection
 	GC.minimize; // gives the OS any memory it can
@@ -37,4 +45,8 @@ void forceGCCleanup() {
 	// reserve 32mb of space from the OS
 	// just in case GC does get to be used, allocation will be free.
 	GC.reserve(1024 * 1024 * 32);
+
+	foreach(id; modules.validIds) { //TODO: change to range!
+		modules[id].postGCCleanup();
+	}
 }

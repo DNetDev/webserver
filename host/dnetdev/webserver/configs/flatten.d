@@ -90,17 +90,17 @@ void flattenConfig() {
 					bool isNotted = d.arguments[0][0] == '!';
 					string actual = isNotted ? d.arguments[0][1 .. $] : d.arguments[0];
 
-					if ((isNotted && (actual !in currentHost.definedValues || !currentHost.definedNames.canFind(actual))) ||
-						(!isNotted && (actual in currentHost.definedValues || currentHost.definedNames.canFind(actual)))) {
+					if ((isNotted && (actual !in currentHost.defineValues || !currentHost.definedNames.canFind(actual))) ||
+						(!isNotted && (actual in currentHost.defineValues || currentHost.definedNames.canFind(actual)))) {
 						execute(cast(ConfigFile)d.childValues, parents ~ d);
 					}
 				}
 			} else {
 				// yes this should really be handled by the module system!
 
-				if (d.name == "define" && d.arguments == 2) {
+				if (d.name == "define" && d.arguments.length == 2) {
 					currentHost.defineValues[d.arguments[0]] = d.arguments[1];
-				} else if (d.name == "define" && d.arguments == 1) {
+				} else if (d.name == "define" && d.arguments.length == 1) {
 					import std.algorithm : canFind;
 					
 					if (!currentHost.definedNames.canFind(d.arguments[0]))

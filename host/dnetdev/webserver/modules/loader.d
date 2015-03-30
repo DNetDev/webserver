@@ -104,6 +104,63 @@ struct ModLoader(T) if (is(T == struct)) {
 			loaders.remove(id);
 		}
 	}
+
+	auto range() {
+		struct ModLoaderRange {
+			private {
+				import dnetdev.webserver.modules.dside : indexsForDfuncs;
+				size_t offset;
+				ModLoader!T me;
+			}
+
+			this(ModLoader!T me) {
+				this.me = me;
+			}
+
+			@property {
+				T* front() { return me[offset]; }
+				bool empty() { return offset >= counter; }
+			}
+
+			void popFront() {
+				offset++;
+
+				if (offset < indexsForDfuncs.keys.length) {
+				} else
+					offset = loaders.keys[offset - indexsForDfuncs.keys.length];
+			}
+
+			T* moveFront() {
+				auto ret = front;
+				popFront;
+				return ret;
+			}
+
+			int opApply(int delegate(T*) dg) {
+				int result = 0;
+				
+				while(!empty) {
+					result = dg(moveFront());
+					if (result)
+						break;
+				}
+				return result;
+			}
+
+			int opApply(int delegate(size_t, T*) dg) {
+				int result = 0;
+
+				while(!empty) {
+					result = dg(offset, moveFront());
+					if (result)
+						break;
+				}
+				return result;
+			}
+		}
+
+		return ModLoaderRange(this);
+	}
 }
 
 private {

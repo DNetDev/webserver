@@ -32,4 +32,9 @@ struct WebServerModuleInterface {
 	@("dnetdev.webserver.modulebase.ui") {
 		bool function(string[] args, out int code) onUIRequest;
 	}
+
+	@("dnetdev.webserver.modulebase.gc") {
+		void function() preGCCleanup;
+		void function() postGCCleanup;
+	}
 }
