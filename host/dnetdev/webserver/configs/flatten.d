@@ -41,6 +41,7 @@ void flattenConfig() {
 	VirtualHost currentHost;
 	bool isPrimary = false;
 	bool[] hadIfsStatus;
+	bool[] isIfVersion;
 	size_t[] parentOffsets;
 
 	void execute(ConfigFile entry, Directive[] exParents) {
@@ -50,6 +51,7 @@ void flattenConfig() {
 			if (parentOffsets.length > 0 && parentOffsets[$-1] == parents.length) {
 				parentOffsets.length--;
 				hadIfsStatus.length--;
+				isIfVersion.length--;
 			}
 
 			if (d.isInternal) {
