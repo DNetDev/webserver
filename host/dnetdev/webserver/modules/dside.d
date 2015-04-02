@@ -36,6 +36,8 @@ void registerInternalModule(string mod = __MODULE__)() {
 	import std.traits : isFunctionPointer;
 	mixin("import theMod = " ~ mod ~ ";");
 
+	dfuncs[mod] = WebServerModuleInterface.init;
+
 	foreach(member; __traits(allMembers, WebServerModuleInterface)) {
 		mixin("alias MTYPE = typeof(WebServerModuleInterface." ~ member ~ ");");
 		static if (isFunctionPointer!MTYPE) {
