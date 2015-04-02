@@ -57,6 +57,10 @@ void flattenConfig() {
 			if (d.isInternal) {
 				if (d.name == "include" && d.arguments.length == 1) {
 					execute(getConfigFile(d.arguments[0]), parents);
+				} else if (d.name == "includeoptional" && d.arguments.length == 1) {
+					auto cf = getConfigFile(d.arguments[0]);
+					if (cf !is null)
+						execute(cf, parents);
 				} else if (d.name == "ifmodule" && d.arguments.length == 2) {
 					ret.modulesToLoad[d.arguments[0]] = d.arguments[1];
 
