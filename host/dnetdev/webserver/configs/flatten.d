@@ -64,15 +64,58 @@ void flattenConfig() {
 						// ignore
 						ret.modulesToLoad.remove(d.arguments[0]);
 					}
+				} else if (d.name == "ifversion" && d.arguments.length == 1) {
+					import dnetdev.webserver.VERSION : NUMBER;
+					import semver;
+
+					// Does not support the regex version that Apache httpd does. Instead uses SemVer range format.
+					// Unlike Apache httpd it does not need multiple arguments.
+
+					string actual = d.arguments[0];
+					bool notIt;
+					if (actual[0] == '!') {
+						notIt = true;
+						actual = actual[1 .. $];
+					}
+					
+					isIfVersion ~= true;
+					hadIfsStatus ~= notIt ? !SemVer(NUMBER).satisfies(SemVerRange(actual)) : SemVer(NUMBER).satisfies(SemVerRange(actual));
+					parentOffsets ~= parents.length;
+
+					if (hadIfsStatus[$-1])
+						execute(cast(ConfigFile)d.childValues, parents ~ d);
 				} else if (d.name == "if" && d.arguments.length == 1) {
 					// TODO: execute argument
 					hadIfsStatus ~= true;//...
+					isIfVersion ~= false;
 					parentOffsets ~= parents.length;
 					execute(cast(ConfigFile)d.childValues, parents ~ d);
-				} else if (d.name == "elseif" && d.arguments.length == 1) {
+				} else if (d.name == "elseif" && d.arguments.length == 1 && isIfVersion[$-1]) {
+					import dnetdev.webserver.VERSION : NUMBER;
+					import semver;
 					assert(parentOffsets.length > 0);	
 					assert(parents.length == parentOffsets[$-1]);
+					
+					// Does not support the regex version that Apache httpd does. Instead uses SemVer range format.
+					// Unlike Apache httpd it does not need multiple arguments.
 
+					string actual = d.arguments[0];
+					bool notIt;
+					if (actual[0] == '!') {
+						notIt = true;
+						actual = actual[1 .. $];
+					}
+					
+					isIfVersion ~= true;
+					hadIfsStatus ~= notIt ? !SemVer(NUMBER).satisfies(SemVerRange(actual)) : SemVer(NUMBER).satisfies(SemVerRange(actual));
+					parentOffsets ~= parents.length;
+					
+					if (hadIfsStatus[$-1])
+						execute(cast(ConfigFile)d.childValues, parents ~ d);
+				} else if (d.name == "elseif" && d.arguments.length == 1 && !isIfVersion[$-1]) {
+					assert(parentOffsets.length > 0);	
+					assert(parents.length == parentOffsets[$-1]);
+					
 					// TODO: execute argument
 					hadIfsStatus[$-1] = true;//...
 					execute(cast(ConfigFile)d.childValues, parents ~ d);
