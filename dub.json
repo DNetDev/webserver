@@ -33,7 +33,7 @@
 		},
 		{
 			"name": "main",
-			"sourceFiles": ["main.d"],
+			"sourceFiles": ["main.d", "VERSION.d"],
 			"sourcePaths": [],
 			"targetType": "executable",
 			"dependencies": {
