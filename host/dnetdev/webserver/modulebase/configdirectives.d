@@ -29,6 +29,6 @@ import dnetdev.webserver.configs.defs;
 import dnetdev.apache_httpd_format;
 export:
 
-void handleConfigDirectiveLoading(Directive entry, Directive[] exParents, ref ServerConfigs ret, ref VirtualHost currentHost);
+void handleConfigDirectiveLoading(Directive entry, Directive[] exParents, ref ServerConfigs ret, ref VirtualHost currentHost, bool isPrimary);
 void postConfigLoading(ref ServerConfigs ret);
 bool validConfig(ref ServerConfigs ret);

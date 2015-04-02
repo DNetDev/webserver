@@ -168,7 +168,7 @@ void flattenConfig() {
 				} else {
 					foreach(loader; ret.modules.range) {
 						if (loader.handleConfigDirectiveLoading !is null) {
-							loader.handleConfigDirectiveLoading(d, exParents, ret, currentHost);
+							loader.handleConfigDirectiveLoading(d, exParents, ret, currentHost, isPrimary);
 						}
 					}
 				}
