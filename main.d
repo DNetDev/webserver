@@ -97,6 +97,8 @@ int main(string[] args) {
                         clientSend(logger, ReloadConfigs);
                     else if (daemonDo == "stop")
                         clientSend(logger, Signal.Stop);
+					else if (daemonDo == "gcreset")
+						clientSend(logger, ResetGC);
                     else if (daemonDo == "uninstall") {
                         version(Windows) {
                             daemonClient.uninstall(logger);
