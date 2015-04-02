@@ -24,6 +24,17 @@
 module dnetdev.webserver.configs.flatten;
 import dnetdev.webserver.configs.defs;
 
+/**
+ * 
+ * TODO:
+ * 		<Files>
+ * 		<FilesMatch>
+ * 		<Limit>
+ * 		<LimitExcept>
+ * 		<Location>
+ * 		<LocationMatch>
+ * 		<VirtualHost>
+ */
 void flattenConfig() {
 	import dnetdev.webserver.runners.config;
 	import dnetdev.apache_httpd_format;
