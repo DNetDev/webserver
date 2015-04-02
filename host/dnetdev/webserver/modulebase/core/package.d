@@ -21,34 +21,10 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-module dnetdev.webserver.modules.dside;
-import dnetdev.webserver.modules.defs;
+module dnetdev.webserver.modulebase.core;
+public import dnetdev.webserver.modulebase.core.configdirectives;
 
-package __gshared {
-	string[size_t] indexsForDfuncs;
-	WebServerModuleInterface[string] dfuncs;
+shared static this() {
+	import dnetdev.webserver.modules.dside;
+	registerInternalModule;
 }
-
-/**
- * Registers a module for usage with the Module loading system.
- */
-void registerInternalModule(string mod = __MODULE__)() {
-	import std.traits : isFunctionPointer;
-	mixin("import theMod = " ~ mod ~ ";");
-
-	foreach(member; __traits(allMembers, WebServerModuleInterface)) {
-		mixin("alias MTYPE = typeof(WebServerModuleInterface." ~ member ~ ");");
-		static if (isFunctionPointer!MTYPE) {
-			static if (__traits(compiles, {mixin("auto v = &theMod." ~ member ~ ";"); })) {
-				enum bindFunc = "dfuncs[mod]." ~ member ~ " = &theMod." ~ member ~ ";";
-
-				static if (__traits(compiles, { mixin(bindFunc); }))
-					mixin(bindFunc);
-			}
-		}
-	}
-
-	indexsForDfuncs[indexsForDfuncs.keys.length] = mod;
-}
-
-string[] getInternalModuleNames() { return indexsForDfuncs.values; }

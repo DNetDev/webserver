@@ -91,7 +91,7 @@ void flattenConfig() {
 					if (hadIfsStatus[$-1])
 						execute(cast(ConfigFile)d.childValues, parents ~ d);
 				} else if (d.name == "if" && d.arguments.length == 1) {
-					// TODO: execute argument
+					// TODO: execute argument http://httpd.apache.org/docs/2.4/expr.html
 					hadIfsStatus ~= true;//...
 					isIfVersion ~= false;
 					parentOffsets ~= parents.length;
@@ -122,7 +122,7 @@ void flattenConfig() {
 					assert(parentOffsets.length > 0);	
 					assert(parents.length == parentOffsets[$-1]);
 					
-					// TODO: execute argument
+					// TODO: execute argument http://httpd.apache.org/docs/2.4/expr.html
 					hadIfsStatus[$-1] = true;//...
 					execute(cast(ConfigFile)d.childValues, parents ~ d);
 				} else if (d.name == "else" && d.arguments.length == 0) {
@@ -155,12 +155,29 @@ void flattenConfig() {
 					if (!currentHost.definedNames.canFind(d.arguments[0]))
 						currentHost.definedNames ~= d.arguments[0];
 				} else {
-					// TODO: call into the module system to do something with this directive under the current scope
+					foreach(loader; ret.modules.range) {
+						if (loader.handleConfigDirectiveLoading !is null) {
+							loader.handleConfigDirectiveLoading(d, exParents, ret, currentHost);
+						}
+					}
 				}
 			}
 		}, exParents, false);
 	}
 
 	execute(getConfigFile(configFile), null);
+
+	foreach(loader; ret.modules.range) {
+		if (loader.postConfigLoading !is null) {
+			loader.postConfigLoading(ret);
+		}
+	}
+
+	foreach(loader; ret.modules.range) {
+		if (loader.validConfig !is null) {
+			assert(loader.validConfig(ret));
+		}
+	}
+
 	systemConfig = ret;
 }

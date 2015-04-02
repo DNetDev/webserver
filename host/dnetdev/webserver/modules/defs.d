@@ -22,6 +22,8 @@
  * SOFTWARE.
  */
 module dnetdev.webserver.modules.defs;
+import dnetdev.webserver.configs.defs;
+import dnetdev.apache_httpd_format;
 
 struct WebServerModuleInterface {
 	@("dnetdev.webserver.modulebase.init") {
@@ -36,5 +38,11 @@ struct WebServerModuleInterface {
 	@("dnetdev.webserver.modulebase.gc") {
 		void function() preGCCleanup;
 		void function() postGCCleanup;
+	}
+
+	@("dnetdev.webserver.modulebase.configdirectives") {
+		void function(Directive entry, Directive[] exParents, ref ServerConfigs ret, ref VirtualHost currentHost) handleConfigDirectiveLoading;
+		void function(ref ServerConfigs ret) postConfigLoading;
+		bool function(ref ServerConfigs ret) validConfig;
 	}
 }
