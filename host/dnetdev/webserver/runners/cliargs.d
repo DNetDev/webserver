@@ -84,8 +84,9 @@ bool cliArgs(string[] cliArgs) {
 
         if (readOption("daemon-action", &daemonDo, "Sends a signal to a daemon. \0\0\0\0\0\0\0\0 " ~ 
                 DaemonActionAddition ~
-                "stop \0 \0\0 = Stops the daemon \0 \0 \0 " ~ 
-                "reload \0\0 = Reload configuration"
+                "stop \0 \0 \0 \0 \0 = Stops the daemon \0 \0 " ~ 
+                "reload \0 \0 \0 = Reload configuration " ~
+				"gcreset \0 \0 = Forces GC to cleanup"
                 ) || runMode == RunMode.DaemonDo) {
             import std.string : toLower;
             daemonDo = daemonDo.toLower;

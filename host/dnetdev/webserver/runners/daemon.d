@@ -32,6 +32,7 @@ import daemonize.d;
 public import daemonize.daemon : Signal;
 
 enum ReloadConfigs = "ReloadConfig".customSignal;
+enum ResetGC = "ResetGC".customSignal;
 
 alias daemon = Daemon!(
 	"Webserver-D",
@@ -57,6 +58,11 @@ alias daemon = Daemon!(
 			// reinitialize from scratch
 			initializeByVibeIndepenent;
 			return true;
+		},
+		ResetGC, (logger) {
+			import dnetdev.webserver.runners.gc : forceGCCleanup;
+			forceGCCleanup;
+			return true;
 		}
 	),
 
@@ -76,7 +82,8 @@ alias daemonClientType = DaemonClient!(
 	Signal.Shutdown,
 	Signal.Stop,
 	Signal.HangUp,
-	ReloadConfigs
+	ReloadConfigs,
+	ResetGC
 );
 
 alias daemonClient = buildDaemon!daemonClientType;
