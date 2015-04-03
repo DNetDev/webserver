@@ -1,5 +1,5 @@
 ﻿/**
- * Override this module
+ * Override this module (in the shared library)
  * 
  * License:
  *     The MIT License (MIT)
@@ -24,11 +24,9 @@
  *     OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  *     SOFTWARE.
  */
-module dnetdev.webserver.modulebase.configdirectives;
-import dnetdev.webserver.configs.defs;
-import dnetdev.apache_httpd_format;
+module dnetdev.webserver.modulebase.gc;
+extern:
 export:
 
-void handleConfigDirectiveLoading(Directive entry, Directive[] exParents, ref ServerConfigs ret, ref VirtualHost currentHost, bool isPrimary);
-void postConfigLoading(ref ServerConfigs ret);
-bool validConfig(ref ServerConfigs ret);
+void preGCCleanup();
+void postGCCleanup();

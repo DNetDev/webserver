@@ -35,7 +35,7 @@ import dnetdev.webserver.configs.defs;
  * 		<LocationMatch>
  * 		<VirtualHost>
  */
-void flattenConfig() {
+export void flattenConfig() {
 	import dnetdev.webserver.runners.config;
 	import dnetdev.apache_httpd_format;
 

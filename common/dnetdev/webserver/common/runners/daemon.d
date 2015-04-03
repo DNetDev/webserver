@@ -21,28 +21,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-module dnetdev.webserver.modules.defs;
-import dnetdev.webserver.configs.defs;
-import dnetdev.apache_httpd_format;
+module dnetdev.webserver.common.runners.daemon;
+version(OSX) {
+    pragma(msg, "daemonize does not support OSX");
+} else:
 
-struct WebServerModuleInterface {
-	@("dnetdev.webserver.modulebase.init") {
-		void function() onModuleLoad;
-		void function() onModuleUnload;
-	}
+import daemonize.d;
 
-	@("dnetdev.webserver.modulebase.ui") {
-		bool function(string[] args, out int code) onUIRequest;
-	}
-
-	@("dnetdev.webserver.modulebase.gc") {
-		void function() preGCCleanup;
-		void function() postGCCleanup;
-	}
-
-	@("dnetdev.webserver.modulebase.configdirectives") {
-		void function(Directive entry, Directive[] exParents, ref ServerConfigs ret, ref VirtualHost currentHost, bool isPrimary) handleConfigDirectiveLoading;
-		void function(ref ServerConfigs ret) postConfigLoading;
-		bool function(ref ServerConfigs ret) validConfig;
-	}
-}
+enum ReloadConfigs = "ReloadConfig".customSignal;
+enum ResetGC = "ResetGC".customSignal;

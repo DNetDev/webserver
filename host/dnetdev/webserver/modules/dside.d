@@ -57,3 +57,10 @@ void registerInternalModule(string mod = __MODULE__)(string name) {
 }
 
 string[] getInternalModuleNames() { return dfuncNames.values; }
+
+WebServerModuleInterface* getInterfaceForId(size_t id) {
+	if (id in indexsForDfuncs)
+		return &dfuncs[indexsForDfuncs[id]];
+	else
+		return null;
+}

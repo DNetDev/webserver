@@ -1,5 +1,5 @@
 ﻿/**
- * Override this module (in the shared library)
+ * Do not override this module
  * 
  * License:
  *     The MIT License (MIT)
@@ -24,8 +24,9 @@
  *     OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  *     SOFTWARE.
  */
-module dnetdev.webserver.modulebase.init;
-export:
+module dnetdev.webserver.modules.loader;
+public import dnetdev.webserver.common.modules.loader : ModLoader;
+import dnetdev.webserver.modulebase.internal.binder;
 
-void onModuleLoad();
-void onModuleUnload();
+size_t load(T)(ModLoader!T ctx, string[] name...) { return callViaHostBind(ctx, name); }
+void unload(T)(ModLoader!T ctx, size_t id) { callViaHostBind(ctx, name); }

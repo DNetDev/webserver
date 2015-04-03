@@ -26,16 +26,15 @@ version(OSX) {
     pragma(msg, "daemonize does not support OSX");
 } else:
 
+import dnetdev.webserver.VERSION : APPNAME;
 import dnetdev.webserver.runners.independent : initializeByVibeIndepenent;
 import dnetdev.webserver.runners.config;
+public import dnetdev.webserver.common.runners.daemon : ReloadConfigs, ResetGC;
 import daemonize.d;
 public import daemonize.daemon : Signal;
 
-enum ReloadConfigs = "ReloadConfig".customSignal;
-enum ResetGC = "ResetGC".customSignal;
-
 alias daemon = Daemon!(
-	"Webserver-D",
+	APPNAME,
 
 	KeyValueList!(
 		Composition!(Signal.Terminate, Signal.Quit, Signal.Shutdown, Signal.Stop), (logger) {
@@ -75,8 +74,12 @@ alias daemon = Daemon!(
 	}
 );
 
+export int initializeAsDaemon() {
+	return buildDaemon!daemon.run(logger); 
+}
+
 alias daemonClientType = DaemonClient!(
-	"Webserver-D",
+	APPNAME,
 	Signal.Terminate,
 	Signal.Quit,
 	Signal.Shutdown,
@@ -88,7 +91,3 @@ alias daemonClientType = DaemonClient!(
 
 alias daemonClient = buildDaemon!daemonClientType;
 alias clientSend = daemonClient.sendSignal;
-
-export int initializeAsDaemon() {
-	return buildDaemon!daemon.run(logger); 
-}

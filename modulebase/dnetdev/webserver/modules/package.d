@@ -24,27 +24,7 @@
  *     OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  *     SOFTWARE.
  */
-module dnetdev.webserver.runners.config;
-public import dnetdev.webserver.common.runners.config : RunMode;
-import dnetdev.webserver.modulebase.internal.binder;
-import dlogg.strict;
-
-@property {
-	void setRunMode(RunMode mode) { callViaHostBind(mode); }
-	void setAsUser(string user) { callViaHostBind(user); }
-	void setAsGroup(string group) { callViaHostBind(group); }
-	void setDaemonDo(string value) { callViaHostBind(value); }
-	void setLockFile(string file) { callViaHostBind(file); }
-	void setConfigFile(string file) { callViaHostBind(file); }
-	void setLogFile(string file) { callViaHostBind(file); }
-	void setLogger(shared(StrictLogger) value) { callViaHostBind(value); }
-	
-	RunMode getRunMode() { return callViaHostBind; }
-	string getAsUser() { return callViaHostBind; }
-	string getAsGroup() { return callViaHostBind; }
-	string getDaemonDo() { return callViaHostBind; }
-	string getLockFile() { return callViaHostBind; }
-	string getConfigFile() { return callViaHostBind; }
-	string getLogFile() { return callViaHostBind; }
-	shared(StrictLogger) getLogger() { return callViaHostBind; }
-}
+module dnetdev.webserver.modules;
+public import dnetdev.webserver.common.modules.defs;
+public import dnetdev.webserver.modules.dside;
+public import dnetdev.webserver.common.modules.loader;

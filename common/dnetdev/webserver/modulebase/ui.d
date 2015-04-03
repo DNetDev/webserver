@@ -1,5 +1,5 @@
 ﻿/**
- * Override this module
+ * Override this module (in the shared library)
  * 
  * License:
  *     The MIT License (MIT)
@@ -24,8 +24,17 @@
  *     OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  *     SOFTWARE.
  */
-module dnetdev.webserver.modulebase.gc;
+module dnetdev.webserver.modulebase.ui;
+extern:
 export:
 
-void preGCCleanup() {}
-void postGCCleanup() {}
+/**
+ * 
+ * Params:
+ * 		args	=	Arguments (manipulated)
+ * 		code	=	Out: Error code, ensure it is 0 if true is returned or it will exit the program
+ * 
+ * Returns:
+ * 		If it should do default behaviour for booting up the system
+ */
+bool onUIRequest(string[] args, out int code);

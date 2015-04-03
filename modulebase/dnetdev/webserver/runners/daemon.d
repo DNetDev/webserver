@@ -29,21 +29,5 @@ version(OSX) {
     pragma(msg, "daemonize does not support OSX");
 } else:
 import dnetdev.webserver.modulebase.internal.binder;
-import daemonize.d;
-
-enum ReloadConfigs = "ReloadConfig".customSignal;
-
-alias daemonClientType = DaemonClient!(
-	"Webserver-D",
-	Signal.Terminate,
-	Signal.Quit,
-	Signal.Shutdown,
-	Signal.Stop,
-	Signal.HangUp,
-	ReloadConfigs
-);
-
-alias daemonClient = buildDaemon!daemonClientType;
-alias clientSend = daemonClient.sendSignal;
 
 int initializeAsDaemon() { return callViaHostBind; }

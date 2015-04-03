@@ -7,17 +7,27 @@
 	"targetType": "none",
 	"subPackages": [
 		{
+			"name": "common",
+			"sourcePaths": ["common"],
+			"importPaths": ["common"],
+			"targetType": "library",
+			"dependencies": {
+    			"derelict-util": ">=1.9.1",
+				"vibe-d": ">=0.7.23-rc.2",
+				"apache_httpd_format": ">=0.1.1",
+				"daemonize": ">=0.1.0"
+			},
+			"versions": ["VibeCustomMain"]
+		},
+		{
 			"name": "host",
 			"sourcePaths": ["host"],
 			"importPaths": ["host"],
 			"targetType": "sourceLibrary",
 			"dependencies": {
-    			"derelict-util": ">=1.9.1",
-				"vibe-d": ">=0.7.23-rc.2",
-				"daemonize": ">=0.1.0",
-				"colorize": ">=1.0.5",
-				"apache_httpd_format": ">=0.1.1",
-				"semver": ">=0.2.0"
+				"dnetdev_webserver:common": "*",
+				"semver": ">=0.2.0",
+				"colorize": ">=1.0.5"
 			},
 			"versions": ["VibeCustomMain"]
 		},
@@ -27,10 +37,8 @@
 			"importPaths": ["modulebase"],
 			"targetType": "dynamicLibrary",
 			"dependencies": {
-				"vibe-d": ">=0.7.23-rc.2",
-				"daemonize": ">=0.1.0",
-				"colorize": ">=1.0.5",
-				"apache_httpd_format": ">=0.1.1"
+				"dnetdev_webserver:common": "*",
+				"colorize": ">=1.0.5"
 			},
 		},
 		{

@@ -1,5 +1,5 @@
 ﻿/**
- * Override this module (in the shared library)
+ * Do not override this module
  * 
  * License:
  *     The MIT License (MIT)
@@ -24,16 +24,9 @@
  *     OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  *     SOFTWARE.
  */
-module dnetdev.webserver.modulebase.ui;
-export:
+module dnetdev.webserver.modules.dside;
+import dnetdev.webserver.common.modules.defs;
+import dnetdev.webserver.modulebase.internal.binder;
 
-/**
- * 
- * Params:
- * 		args	=	Arguments (manipulated)
- * 		code	=	Out: Error code, ensure it is 0 if true is returned or it will exit the program
- * 
- * Returns:
- * 		If it should do default behaviour for booting up the system
- */
-bool onUIRequest(string[] args, out int code);
+string[] getInternalModuleNames() { return callViaHostBind; }
+WebServerModuleInterface* getInterfaceForId(size_t id) { return callViaHostBind(id); }

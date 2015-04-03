@@ -1,5 +1,5 @@
 ﻿/**
- * Override this module
+ * Override this module (in the shared library)
  * 
  * License:
  *     The MIT License (MIT)
@@ -24,9 +24,9 @@
  *     OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  *     SOFTWARE.
  */
-module dnetdev.webserver.modulebase.ui;
+module dnetdev.webserver.modulebase.init;
+extern:
 export:
 
-bool onUIRequest(string[] args, out int code) {
-	return true; // do default behaviour as we are doing nothing anyway
-}
+void onModuleLoad();
+void onModuleUnload();

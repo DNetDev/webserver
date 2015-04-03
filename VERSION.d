@@ -31,3 +31,5 @@ module dnetdev.webserver.VERSION;
 enum NAME = "DNetDev Web Server";
 enum NUMBER = "0.0.0";
 enum BY = "Richard Andrew Cattermole";
+
+enum APPNAME = "Webserver-D";

@@ -1,5 +1,5 @@
 ﻿/**
- * Override this module (in the shared library)
+ * Do not override this module
  * 
  * License:
  *     The MIT License (MIT)
@@ -24,11 +24,7 @@
  *     OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  *     SOFTWARE.
  */
-module dnetdev.webserver.modulebase.configdirectives;
-import dnetdev.webserver.configs.defs;
-import dnetdev.apache_httpd_format;
-export:
+module dnetdev.webserver.configs.flatten;
+import dnetdev.webserver.modulebase.internal.binder;
 
-void handleConfigDirectiveLoading(Directive entry, Directive[] exParents, ref ServerConfigs ret, ref VirtualHost currentHost, bool isPrimary);
-void postConfigLoading(ref ServerConfigs ret);
-bool validConfig(ref ServerConfigs ret);
+void flattenConfig() { callViaHostBind(); }

@@ -21,23 +21,10 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-module dnetdev.webserver.modules.loader;
-public import dnetdev.webserver.common.modules.loader : ModLoader;
-import dnetdev.webserver.common.modules.loader;
-export:
-
-size_t load(T)(ModLoader!T ctx, string[] name...) {
-	auto v = new LoaderSharedLibrary!T(name, cast(string[])ctx.searchLocations);
-	v.load();
-	v.onModuleLoad();
-
-	return addModuleLoader(ctx, v);
-}
-
-void unload(T)(ModLoader!T ctx, size_t id) {
-	auto v = removeModuleLoader(ctx, id);
-	if (v !is null) {
-		v.onModuleUnload();			
-		v.unload;
-	}
-}
+module dnetdev.webserver.runners;
+public import dnetdev.webserver.runners.cliargs;
+public import dnetdev.webserver.runners.config;
+public import dnetdev.webserver.runners.daemon;
+public import dnetdev.webserver.runners.fastcgi;
+public import dnetdev.webserver.runners.gc;
+public import dnetdev.webserver.runners.independent;

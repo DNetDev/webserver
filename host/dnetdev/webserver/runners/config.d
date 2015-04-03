@@ -22,14 +22,8 @@
  * SOFTWARE.
  */
 module dnetdev.webserver.runners.config;
+public import dnetdev.webserver.common.runners.config : RunMode;
 import dlogg.strict;
-
-enum RunMode : ubyte {
-	Independent,
-	Daemon,
-	DaemonDo,
-	FastCGI
-}
 
 package(dnetdev.webserver) {
 	ubyte runMode;

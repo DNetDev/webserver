@@ -27,4 +27,4 @@
 module dnetdev.webserver.runners.cliargs;
 import dnetdev.webserver.modulebase.internal.binder;
 
-bool cliArgs(string[] cliArgs) { callViaHostBind(cliArgs); }
+bool cliArgs(string[] cliArgs) { return callViaHostBind(cliArgs); }

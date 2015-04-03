@@ -21,23 +21,28 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-module dnetdev.webserver.modules.loader;
-public import dnetdev.webserver.common.modules.loader : ModLoader;
-import dnetdev.webserver.common.modules.loader;
-export:
+module dnetdev.webserver.common.modules.defs;
+import dnetdev.webserver.common.configs.defs;
+import dnetdev.apache_httpd_format;
 
-size_t load(T)(ModLoader!T ctx, string[] name...) {
-	auto v = new LoaderSharedLibrary!T(name, cast(string[])ctx.searchLocations);
-	v.load();
-	v.onModuleLoad();
+struct WebServerModuleInterface {
+	@("dnetdev.webserver.modulebase.init") {
+		void function() onModuleLoad;
+		void function() onModuleUnload;
+	}
 
-	return addModuleLoader(ctx, v);
-}
+	@("dnetdev.webserver.modulebase.ui") {
+		bool function(string[] args, out int code) onUIRequest;
+	}
 
-void unload(T)(ModLoader!T ctx, size_t id) {
-	auto v = removeModuleLoader(ctx, id);
-	if (v !is null) {
-		v.onModuleUnload();			
-		v.unload;
+	@("dnetdev.webserver.modulebase.gc") {
+		void function() preGCCleanup;
+		void function() postGCCleanup;
+	}
+
+	@("dnetdev.webserver.modulebase.configdirectives") {
+		void function(Directive entry, Directive[] exParents, ref ServerConfigs ret, ref VirtualHost currentHost, bool isPrimary) handleConfigDirectiveLoading;
+		void function(ref ServerConfigs ret) postConfigLoading;
+		bool function(ref ServerConfigs ret) validConfig;
 	}
 }

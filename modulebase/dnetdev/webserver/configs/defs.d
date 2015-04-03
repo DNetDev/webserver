@@ -25,74 +25,8 @@
  *     SOFTWARE.
  */
 module dnetdev.webserver.configs.defs;
+public import dnetdev.webserver.common.configs.defs : ServerLogLevel, VirtualHost, ServerConfigs;
 import dnetdev.webserver.modulebase.internal.binder;
 
-ServerConfigs* getSystemConfig() { return callViaHostBind(mode); }
-
-enum ServerLogLevel {
-	Debug,
-	Info,
-	Notice,
-	Warn,
-	Error,
-	Critical,
-	Alert,
-	Emergency
-}
-
-struct ServerConfigs {
-	string rootDirectory;
-	
-	VirtualHost primaryHost;
-	// requires a copy of directories/files that are not specific to primary host to each virtual hosts as they are global
-	VirtualHost[] virtualHosts;
-	
-	string[string] modulesToLoad;
-	
-	string[][string] otherDirectives;
-
-	private { // ensures correct size of struct
-		import dnetdev.webserver.modules.defs;
-		import dnetdev.webserver.modules.loader;
-		
-		ModLoader!WebServerModuleInterface testModuleLoader;
-		size_t[string] moduleToid;
-		bool searchLocationsSetup = false;
-	}
-
-	@property {
-		ModLoader!WebServerModuleInterface modules();
-	}
-	
-	bool moduleLoadable(string name);
-}
-
-struct VirtualHost {
-	ushort port;
-	string domain;
-	
-	string admin;
-	string name;
-	
-	string[ushort] errorMessage;
-	string[ushort] localErrorRedirects;
-	string[ushort] externalErrorRedirects;
-	
-	string[][string] otherDirectives;
-	
-	string errorLogFile;
-	ServerLogLevel logLevel;
-	
-	string overrides; // TODO: fix type
-	string requires; // TODO: fix type
-	
-	string[] options; // TODO: fix type
-	
-	VirtualHost*[string] directories;
-	VirtualHost*[string] files;
-	
-	string directoryIndexFile;
-	
-	string[string] defineValues;
-	string[] definedNames;
-}
+ServerConfigs* getSystemConfig() { return callViaHostBind(); }
+bool moduleLoadable(ServerConfigs ctx, string name) { return callViaHostBind(ctx, name); }
