@@ -26,5 +26,5 @@ public import dnetdev.webserver.modulebase.core.configdirectives;
 
 shared static this() {
 	import dnetdev.webserver.modules.dside;
-	registerInternalModule;
+	registerInternalModule("core");
 }

@@ -27,12 +27,13 @@ import dnetdev.webserver.modules.defs;
 package __gshared {
 	string[size_t] indexsForDfuncs;
 	WebServerModuleInterface[string] dfuncs;
+	string[size_t] dfuncNames;
 }
 
 /**
  * Registers a module for usage with the Module loading system.
  */
-void registerInternalModule(string mod = __MODULE__)() {
+void registerInternalModule(string mod = __MODULE__)(string name) {
 	import std.traits : isFunctionPointer;
 	mixin("import theMod = " ~ mod ~ ";");
 
@@ -50,7 +51,9 @@ void registerInternalModule(string mod = __MODULE__)() {
 		}
 	}
 
-	indexsForDfuncs[indexsForDfuncs.keys.length] = mod;
+	auto id = indexsForDfuncs.keys.length;
+	indexsForDfuncs[id] = mod;
+	dfuncNames[id] = name;
 }
 
-string[] getInternalModuleNames() { return indexsForDfuncs.values; }
+string[] getInternalModuleNames() { return dfuncNames.values; }

@@ -29,7 +29,8 @@
 			"dependencies": {
 				"vibe-d": ">=0.7.23-rc.2",
 				"daemonize": ">=0.1.0",
-				"colorize": ">=1.0.5"
+				"colorize": ">=1.0.5",
+				"apache_httpd_format": ">=0.1.1"
 			},
 		},
 		{
