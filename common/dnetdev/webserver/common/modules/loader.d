@@ -150,6 +150,7 @@ package(dnetdev.webserver) {
 		protected {
 			override void loadSymbols() {
 				import std.traits : isFunctionPointer;
+				void* value;
 
 				foreach(member; __traits(allMembers, T)) {
 					mixin("alias MTYPE = typeof(T." ~ member ~ ");");
@@ -164,7 +165,6 @@ package(dnetdev.webserver) {
 							
 							static assert(__traits(compiles, member ~ " = &theModule." ~ member ~ ";"), "Struct declaration does not match the stub version.");
 
-							void* value;
 							bindFunc(&value, mangled, false);
 
 							version(Windows) {
