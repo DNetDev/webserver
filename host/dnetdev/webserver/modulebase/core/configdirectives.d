@@ -25,7 +25,7 @@ module dnetdev.webserver.modulebase.core.configdirectives;
 import dnetdev.webserver.configs.defs;
 import dnetdev.apache_httpd_format;
 
-void handleConfigDirectiveLoading(Directive entry, Directive[] exParents, ref ServerConfigs ret, ref VirtualHost currentHost, bool isPrimary) {
+void handleConfigDirectiveLoading(Directive entry, Directive[] exParents, ref ServerConfigs ret, VirtualHost* currentHost, bool isPrimary) {
 
 }
 

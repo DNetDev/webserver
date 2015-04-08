@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 module dnetdev.webserver.modules.dside;
-import dnetdev.webserver.modules.defs;
+import dnetdev.webserver.common.modules.defs;
 
 package __gshared {
 	string[size_t] indexsForDfuncs;

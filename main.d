@@ -31,8 +31,7 @@ import colorize : fg, cwriteln, color, style, mode;
 import dlogg.strict;
 
 int main(string[] args) {
-	import dnetdev.webserver.modules.loader;
-	import dnetdev.webserver.modules.defs;
+	import dnetdev.webserver.modules;
 
 	import core.memory : GC;
 	GC.disable; // make sure we do not do any hidden collections

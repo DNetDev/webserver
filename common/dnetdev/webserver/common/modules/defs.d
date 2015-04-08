@@ -41,7 +41,7 @@ struct WebServerModuleInterface {
 	}
 
 	@("dnetdev.webserver.modulebase.configdirectives") {
-		void function(Directive entry, Directive[] exParents, ref ServerConfigs ret, ref VirtualHost currentHost, bool isPrimary) handleConfigDirectiveLoading;
+		void function(Directive entry, Directive[] exParents, ref ServerConfigs ret, VirtualHost* currentHost, bool isPrimary) handleConfigDirectiveLoading;
 		void function(ref ServerConfigs ret) postConfigLoading;
 		bool function(ref ServerConfigs ret) validConfig;
 	}

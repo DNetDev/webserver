@@ -24,4 +24,4 @@
 module dnetdev.webserver.modules;
 public import dnetdev.webserver.common.modules.defs;
 public import dnetdev.webserver.modules.dside;
-public import dnetdev.webserver.common.modules.loader;
+public import dnetdev.webserver.modules.loader;

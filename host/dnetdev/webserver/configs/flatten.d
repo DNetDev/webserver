@@ -49,7 +49,7 @@ export void flattenConfig() {
 	}
 
 	ServerConfigs ret;
-	VirtualHost currentHost;
+	VirtualHost* currentHost;
 	bool isPrimary = false;
 	bool[] hadIfsStatus;
 	bool[] isIfVersion;
@@ -154,6 +154,18 @@ export void flattenConfig() {
 						(!isNotted && (actual in currentHost.defineValues || currentHost.definedNames.canFind(actual)))) {
 						execute(cast(ConfigFile)d.childValues, parents ~ d);
 					}
+				} else if (d.name == "virtualhost" && d.arguments.length == 1) {
+					bool prePrim = isPrimary;
+					isPrimary = false;
+					VirtualHost* preHost = currentHost;
+					
+					parentOffsets ~= parents.length;
+					ret.virtualHosts.length++;
+					currentHost = &ret.virtualHosts[$-1];
+					execute(cast(ConfigFile)d.childValues, parents ~ d);
+					
+					currentHost = preHost;
+					isPrimary = prePrim;
 				}
 			} else {
 				// yes this should really be handled by the module system!
@@ -176,6 +188,9 @@ export void flattenConfig() {
 		}, exParents, false);
 	}
 
+	isPrimary = true;
+	currentHost = new VirtualHost;
+	ret.primaryHost = currentHost;
 	execute(getConfigFile(configFile), null);
 
 	foreach(loader; ret.modules.range) {

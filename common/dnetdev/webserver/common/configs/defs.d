@@ -55,8 +55,8 @@ struct VirtualHost {
 
 	string[] options; // TODO: fix type
 
-	VirtualHost*[string] directories;
-	VirtualHost*[string] files;
+	//VirtualHost*[string] directories;
+	//VirtualHost*[string] files;
 
 	string directoryIndexFile;
 
@@ -67,7 +67,7 @@ struct VirtualHost {
 struct ServerConfigs {
 	string rootDirectory;
 	
-	VirtualHost primaryHost;
+	VirtualHost* primaryHost;
 	// requires a copy of directories/files that are not specific to primary host to each virtual hosts as they are global
 	VirtualHost[] virtualHosts;
 	
