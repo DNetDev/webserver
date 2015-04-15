@@ -163,8 +163,7 @@ export void flattenConfig() {
 					isDefined = !isRootDirectory && ((isNotted && (actual !in currentFileSelector.defineValues || !currentFileSelector.definedNames.canFind(actual))) ||
 													(!isNotted && (actual in currentFileSelector.defineValues || currentFileSelector.definedNames.canFind(actual))) || isDefined);
 
-					if ((isNotted && (actual !in currentFileSelector.defineValues || !currentFileSelector.definedNames.canFind(actual))) ||
-						(!isNotted && (actual in currentFileSelector.defineValues || currentFileSelector.definedNames.canFind(actual)))) {
+					if (isDefined) {
 						execute(cast(ConfigFile)d.childValues, parents ~ d);
 					}
 				} else if (d.name == "virtualhost" && d.arguments.length == 1) {
