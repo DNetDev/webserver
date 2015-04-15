@@ -41,6 +41,16 @@ struct VirtualHost {
 	string admin;
 	string name;
 
+	VirtualDirectory* rootDirectory;
+	VirtualDirectory*[string] directories;
+	VirtualDirectory*[string] directoryMatch;
+	VirtualDirectory*[string] files;
+	VirtualDirectory*[string] fileMatch;
+	VirtualDirectory*[string] location;
+	VirtualDirectory*[string] locationMatch;
+}
+
+struct VirtualDirectory {
 	string[ushort] errorMessage;
 	string[ushort] localErrorRedirects;
 	string[ushort] externalErrorRedirects;
@@ -55,10 +65,7 @@ struct VirtualHost {
 
 	string[] options; // TODO: fix type
 
-	//VirtualHost*[string] directories;
-	//VirtualHost*[string] files;
-
-	string directoryIndexFile;
+	string indexFile;
 
 	string[string] defineValues;
 	string[] definedNames;

@@ -27,13 +27,8 @@ import dnetdev.webserver.configs.defs;
 /**
  * 
  * TODO:
- * 		<Files>
- * 		<FilesMatch>
  * 		<Limit>
  * 		<LimitExcept>
- * 		<Location>
- * 		<LocationMatch>
- * 		<VirtualHost>
  */
 export void flattenConfig() {
 	import dnetdev.webserver.runners.config;
@@ -49,8 +44,12 @@ export void flattenConfig() {
 	}
 
 	ServerConfigs ret;
+
 	VirtualHost* currentHost;
 	bool isPrimary = false;
+	VirtualDirectory* currentFileSelector;
+	bool isRootDirectory;
+
 	bool[] hadIfsStatus;
 	bool[] isIfVersion;
 	size_t[] parentOffsets;
@@ -149,38 +148,134 @@ export void flattenConfig() {
 
 					bool isNotted = d.arguments[0][0] == '!';
 					string actual = isNotted ? d.arguments[0][1 .. $] : d.arguments[0];
+					
+					bool isDefined;
+					
+					// server config
+					isDefined = (isNotted && (actual !in ret.primaryHost.rootDirectory.defineValues || !ret.primaryHost.rootDirectory.definedNames.canFind(actual))) ||
+								(!isNotted && (actual in ret.primaryHost.rootDirectory.defineValues || ret.primaryHost.rootDirectory.definedNames.canFind(actual)));
+					
+					// virtual host
+					isDefined = !isRootDirectory && ((isNotted && (actual !in currentHost.rootDirectory.defineValues || !currentHost.rootDirectory.definedNames.canFind(actual))) ||
+													(!isNotted && (actual in currentHost.rootDirectory.defineValues || currentHost.rootDirectory.definedNames.canFind(actual))) || isDefined);
 
-					if ((isNotted && (actual !in currentHost.defineValues || !currentHost.definedNames.canFind(actual))) ||
-						(!isNotted && (actual in currentHost.defineValues || currentHost.definedNames.canFind(actual)))) {
+					// directory
+					isDefined = !isRootDirectory && ((isNotted && (actual !in currentFileSelector.defineValues || !currentFileSelector.definedNames.canFind(actual))) ||
+													(!isNotted && (actual in currentFileSelector.defineValues || currentFileSelector.definedNames.canFind(actual))) || isDefined);
+
+					if ((isNotted && (actual !in currentFileSelector.defineValues || !currentFileSelector.definedNames.canFind(actual))) ||
+						(!isNotted && (actual in currentFileSelector.defineValues || currentFileSelector.definedNames.canFind(actual)))) {
 						execute(cast(ConfigFile)d.childValues, parents ~ d);
 					}
 				} else if (d.name == "virtualhost" && d.arguments.length == 1) {
 					bool prePrim = isPrimary;
 					isPrimary = false;
 					VirtualHost* preHost = currentHost;
+
+					bool isRoot = isRootDirectory;
+					VirtualDirectory* preDir = currentFileSelector;
 					
 					parentOffsets ~= parents.length;
 					ret.virtualHosts.length++;
 					currentHost = &ret.virtualHosts[$-1];
+
+					currentFileSelector = new VirtualDirectory;
+					currentHost.rootDirectory = currentFileSelector;
+					isRootDirectory = true;
+
 					execute(cast(ConfigFile)d.childValues, parents ~ d);
 					
+					isRootDirectory = isRoot;
+					currentFileSelector = preDir;
 					currentHost = preHost;
 					isPrimary = prePrim;
+				} else if (d.name == "directory" && d.arguments.length == 1) {
+					bool isRoot = isRootDirectory;
+					VirtualDirectory* preDir = currentFileSelector;
+					
+					currentFileSelector = new VirtualDirectory;
+					currentHost.directories[d.arguments[0]] = currentFileSelector;
+					isRootDirectory = false;
+					
+					execute(cast(ConfigFile)d.childValues, parents ~ d);
+
+					isRootDirectory = isRoot;
+					currentFileSelector = preDir;
+				} else if ((d.name == "directory" && d.arguments.length == 2 && d.arguments[0] == "~") || (d.name == "directorymatch" && d.arguments.length == 1)) {
+					bool isRoot = isRootDirectory;
+					VirtualDirectory* preDir = currentFileSelector;
+					
+					currentFileSelector = new VirtualDirectory;
+					currentHost.directoryMatch[d.arguments[$-1]] = currentFileSelector;
+					isRootDirectory = false;
+					
+					execute(cast(ConfigFile)d.childValues, parents ~ d);
+					
+					isRootDirectory = isRoot;
+					currentFileSelector = preDir;
+				} else if (d.name == "file" && d.arguments.length == 1) {
+					bool isRoot = isRootDirectory;
+					VirtualDirectory* preDir = currentFileSelector;
+					
+					currentFileSelector = new VirtualDirectory;
+					currentHost.files[d.arguments[0]] = currentFileSelector;
+					isRootDirectory = false;
+					
+					execute(cast(ConfigFile)d.childValues, parents ~ d);
+					
+					isRootDirectory = isRoot;
+					currentFileSelector = preDir;
+				} else if ((d.name == "file" && d.arguments.length == 2 && d.arguments[0] == "~") || (d.name == "filematch" && d.arguments.length == 1)) {
+					bool isRoot = isRootDirectory;
+					VirtualDirectory* preDir = currentFileSelector;
+					
+					currentFileSelector = new VirtualDirectory;
+					currentHost.fileMatch[d.arguments[$-1]] = currentFileSelector;
+					isRootDirectory = false;
+					
+					execute(cast(ConfigFile)d.childValues, parents ~ d);
+					
+					isRootDirectory = isRoot;
+					currentFileSelector = preDir;
+				} else if (d.name == "location" && d.arguments.length == 1) {
+					bool isRoot = isRootDirectory;
+					VirtualDirectory* preDir = currentFileSelector;
+					
+					currentFileSelector = new VirtualDirectory;
+					currentHost.location[d.arguments[0]] = currentFileSelector;
+					isRootDirectory = false;
+					
+					execute(cast(ConfigFile)d.childValues, parents ~ d);
+					
+					isRootDirectory = isRoot;
+					currentFileSelector = preDir;
+				} else if ((d.name == "location" && d.arguments.length == 2 && d.arguments[0] == "~") || (d.name == "locationmatch" && d.arguments.length == 1)) {
+					bool isRoot = isRootDirectory;
+					VirtualDirectory* preDir = currentFileSelector;
+					
+					currentFileSelector = new VirtualDirectory;
+					currentHost.locationMatch[d.arguments[$-1]] = currentFileSelector;
+					isRootDirectory = false;
+					
+					execute(cast(ConfigFile)d.childValues, parents ~ d);
+					
+					isRootDirectory = isRoot;
+					currentFileSelector = preDir;
 				}
 			} else {
 				// yes this should really be handled by the module system!
 
 				if (d.name == "define" && d.arguments.length == 2) {
-					currentHost.defineValues[d.arguments[0]] = d.arguments[1];
+					currentFileSelector.defineValues[d.arguments[0]] = d.arguments[1];
 				} else if (d.name == "define" && d.arguments.length == 1) {
 					import std.algorithm : canFind;
 					
-					if (!currentHost.definedNames.canFind(d.arguments[0]))
-						currentHost.definedNames ~= d.arguments[0];
+					if (!currentFileSelector.definedNames.canFind(d.arguments[0]))
+						currentFileSelector.definedNames ~= d.arguments[0];
 				} else {
 					foreach(loader; ret.modules.range) {
 						if (loader.handleConfigDirectiveLoading !is null) {
-							loader.handleConfigDirectiveLoading(d, exParents, ret, currentHost, isPrimary);
+							loader.handleConfigDirectiveLoading(d, exParents, ret, currentHost, isPrimary, currentFileSelector, isRootDirectory);
 						}
 					}
 				}
@@ -191,6 +286,16 @@ export void flattenConfig() {
 	isPrimary = true;
 	currentHost = new VirtualHost;
 	ret.primaryHost = currentHost;
+	isRootDirectory = true;
+	currentFileSelector = new VirtualDirectory;
+	currentHost.rootDirectory = currentFileSelector;
+
+	foreach(loader; ret.modules.range) {
+		if (loader.preConfigLoading !is null) {
+			loader.preConfigLoading(ret);
+		}
+	}
+
 	execute(getConfigFile(configFile), null);
 
 	foreach(loader; ret.modules.range) {

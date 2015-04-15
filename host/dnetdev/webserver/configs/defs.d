@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 module dnetdev.webserver.configs.defs;
-public import dnetdev.webserver.common.configs.defs : ServerLogLevel, VirtualHost, ServerConfigs;
+public import dnetdev.webserver.common.configs.defs : ServerLogLevel, VirtualHost, ServerConfigs, VirtualDirectory;
 
 package {
 	ServerConfigs systemConfig;
