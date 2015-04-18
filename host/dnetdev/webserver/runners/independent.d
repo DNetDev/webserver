@@ -27,16 +27,52 @@ export void initializeByVibeIndepenent() {
 	import dnetdev.webserver.configs;
 	import dnetdev.webserver.runners.gc;
 	import vibe.core.core : runEventLoop;
+	import std.algorithm : canFind;
+
+	// FIXME: close precreated sockets
 
 	// load config
 	flattenConfig;
 	ServerConfigs* config = getSystemConfig();
 
-	// foreach unique ip/port pair
-	//  start listeners
+	// get the ports + ip's we are hosting on
+
+	string[][ushort] portIps;
+	portIps = getSystemConfig().primaryHost.listenOn.dup;
+
+	foreach(host; getSystemConfig().virtualHosts) {
+		foreach(k, v; host.listenOn) {
+			alias to = portIps[k];
+
+			foreach(v2; v) {
+				if (!to.canFind(v2))
+					to ~= v2;
+			}
+		}
+	}
+
+	foreach(port, ips; portIps) {
+		auto settings = new HTTPServerSettings;
+		settings.port = port;
+		settings.bindAddresses = ips;
+		// TODO: ssl
+		// TODO: other settings
+		listenHTTP(settings, &handleRequest); // FIXME: UGH how to close once created?
+	}
 
 	// module system preEventLoop call
+	foreach(mod; config.modules) {
+		mod.preEventLoop;
+	}
 
 	forceGCCleanup;
 	runEventLoop;
+}
+
+private {
+	import vibe.http.server : HTTPServerSettings, listenHTTP, HTTPServerRequest, HTTPServerResponse;
+
+	void handleRequest(scope HTTPServerRequest req, scope HTTPServerResponse res) {
+
+	}
 }

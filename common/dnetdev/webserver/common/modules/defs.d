@@ -29,6 +29,7 @@ struct WebServerModuleInterface {
 	@("dnetdev.webserver.modulebase.init") {
 		void function() onModuleLoad;
 		void function() onModuleUnload;
+		void function() preEventLoop;
 	}
 
 	@("dnetdev.webserver.modulebase.ui") {

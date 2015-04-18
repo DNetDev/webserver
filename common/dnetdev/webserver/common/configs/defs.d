@@ -35,7 +35,7 @@ enum ServerLogLevel {
 }
 
 struct VirtualHost {
-	ushort port;
+	string[][ushort] listenOn;
 	string domain;
 
 	string admin;

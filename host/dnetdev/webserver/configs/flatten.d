@@ -166,7 +166,7 @@ export void flattenConfig() {
 					if (isDefined) {
 						execute(cast(ConfigFile)d.childValues, parents ~ d);
 					}
-				} else if (d.name == "virtualhost" && d.arguments.length == 1) {
+				} else if (d.name == "virtualhost" && d.arguments.length >= 1) {
 					bool prePrim = isPrimary;
 					isPrimary = false;
 					VirtualHost* preHost = currentHost;
@@ -181,6 +181,8 @@ export void flattenConfig() {
 					currentFileSelector = new VirtualDirectory;
 					currentHost.rootDirectory = currentFileSelector;
 					isRootDirectory = true;
+
+					// TODO: get ips/ports!
 
 					execute(cast(ConfigFile)d.childValues, parents ~ d);
 					

@@ -30,3 +30,4 @@ export:
 
 void onModuleLoad();
 void onModuleUnload();
+void preEventLoop();
