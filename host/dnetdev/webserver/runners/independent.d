@@ -42,11 +42,9 @@ export void initializeByVibeIndepenent() {
 
 	foreach(host; getSystemConfig().virtualHosts) {
 		foreach(k, v; host.listenOn) {
-			alias to = portIps[k];
-
 			foreach(v2; v) {
-				if (!to.canFind(v2))
-					to ~= v2;
+				if (!portIps[k].canFind(v2))
+					portIps[k] ~= v2;
 			}
 		}
 	}
@@ -61,8 +59,8 @@ export void initializeByVibeIndepenent() {
 	}
 
 	// module system preEventLoop call
-	foreach(mod; config.modules) {
-		mod.preEventLoop;
+	foreach(mod; config.modules.range()) {
+		mod.preEventLoop();
 	}
 
 	forceGCCleanup;

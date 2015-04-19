@@ -21,7 +21,8 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-module dnetdev.webserver.configs;
-public import dnetdev.webserver.configs.defs;
-public import dnetdev.webserver.configs.flatten;
-public import dnetdev.webserver.configs.runtime;
+module dnetdev.webserver.configs.runtime;
+
+export void createRuntimeConfigMapping() {
+
+}

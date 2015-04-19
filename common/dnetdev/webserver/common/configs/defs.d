@@ -97,3 +97,7 @@ struct ServerConfigs {
 		}
 	}
 }
+
+struct RuntimeConfigMapping {
+
+}

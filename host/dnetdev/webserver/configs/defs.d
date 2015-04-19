@@ -22,16 +22,21 @@
  * SOFTWARE.
  */
 module dnetdev.webserver.configs.defs;
-public import dnetdev.webserver.common.configs.defs : ServerLogLevel, VirtualHost, ServerConfigs, VirtualDirectory;
+public import dnetdev.webserver.common.configs.defs : ServerLogLevel, VirtualHost, ServerConfigs, VirtualDirectory, RuntimeConfigMapping;
 
 package {
 	ServerConfigs systemConfig;
+	RuntimeConfigMapping runtimeConfigMapping;
 }
 
 export:
 
 ServerConfigs* getSystemConfig() {
 	return &systemConfig;
+}
+
+RuntimeConfigMapping* getRuntimeConfigMapping() {
+	return &runtimeConfigMapping;
 }
 
 bool moduleLoadable(ServerConfigs ctx, string name) {

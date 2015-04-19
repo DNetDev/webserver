@@ -24,10 +24,7 @@
  *     OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  *     SOFTWARE.
  */
-module dnetdev.webserver.configs.defs;
-public import dnetdev.webserver.common.configs.defs : ServerLogLevel, VirtualHost, ServerConfigs, RuntimeConfigMapping;
+module dnetdev.webserver.configs.runtime;
 import dnetdev.webserver.modulebase.internal.binder;
 
-ServerConfigs* getSystemConfig() { return callViaHostBind(); }
-RuntimeConfigMapping* getRuntimeConfigMapping() { return callViaHostBind(); }
-bool moduleLoadable(ServerConfigs ctx, string name) { return callViaHostBind(ctx, name); }
+void createRuntimeConfigMapping() { callViaHostBind(); }
