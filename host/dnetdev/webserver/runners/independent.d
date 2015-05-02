@@ -22,9 +22,9 @@
  * SOFTWARE.
  */
 module dnetdev.webserver.runners.independent;
+import dnetdev.webserver.configs;
 
-export void initializeByVibeIndepenent(bool withEventLoop=true) {
-	import dnetdev.webserver.configs;
+export void initializeByVibeIndepenent(bool withEventLoop=true, ServerConfigs* config = null) {
 	import dnetdev.webserver.runners.gc;
 	import vibe.core.core : runEventLoop;
 	import vibe.http.server : HTTPServerSettings, listenHTTP, HTTPServerRequest, HTTPServerResponse;
@@ -33,8 +33,10 @@ export void initializeByVibeIndepenent(bool withEventLoop=true) {
 	// FIXME: close precreated sockets
 
 	// load config
-	flattenConfig;
-	ServerConfigs* config = getSystemConfig();
+	if (config is null) {
+		flattenConfig;
+		config = getSystemConfig();
+	}
 
 	// get the ports + ip's we are hosting on
 
