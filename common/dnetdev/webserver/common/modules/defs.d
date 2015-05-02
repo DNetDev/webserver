@@ -24,6 +24,7 @@
 module dnetdev.webserver.common.modules.defs;
 import dnetdev.webserver.common.configs.defs;
 import dnetdev.apache_httpd_format;
+import vibe.http.server : HTTPServerRequest, HTTPServerResponse;
 
 struct WebServerModuleInterface {
 	@("dnetdev.webserver.modulebase.init") {
@@ -46,5 +47,13 @@ struct WebServerModuleInterface {
 		void function(ref ServerConfigs ret) preConfigLoading;
 		void function(ref ServerConfigs ret) postConfigLoading;
 		bool function(ref ServerConfigs ret) validConfig;
+	}
+
+	@("dnetdev.webserver.modulebase.pipeline") {
+		bool function(ref ServerConfigs serverConfig, VirtualHost* theVirtualHost, HTTPServerRequest theRequest) translate_name;
+		void function(ref ServerConfigs serverConfig, VirtualHost* theVirtualHost, ref VirtualDirectory protection, HTTPServerRequest theRequest) map_to_storage;
+		bool function(ref ServerConfigs serverConfig, VirtualHost* theVirtualHost, ref VirtualDirectory protection, HTTPServerRequest theRequest) havePriviledges;
+		bool function(ref ServerConfigs serverConfig, VirtualHost* theVirtualHost, ref VirtualDirectory protection, HTTPServerRequest theRequest, ref string mimeType) decideMime;
+		bool function(ref ServerConfigs serverConfig, VirtualHost* theVirtualHost, ref VirtualDirectory protection, ref string mimeType, HTTPServerRequest theRequest, HTTPServerResponse theResponse) processRequest;
 	}
 }

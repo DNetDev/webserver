@@ -23,6 +23,7 @@
  */
 module dnetdev.webserver.modulebase.core;
 public import dnetdev.webserver.modulebase.core.configdirectives;
+public import dnetdev.webserver.modulebase.core.pipeline;
 
 shared static this() {
 	import dnetdev.webserver.modules.dside;

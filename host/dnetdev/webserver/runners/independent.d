@@ -27,6 +27,7 @@ export void initializeByVibeIndepenent() {
 	import dnetdev.webserver.configs;
 	import dnetdev.webserver.runners.gc;
 	import vibe.core.core : runEventLoop;
+	import vibe.http.server : HTTPServerSettings, listenHTTP, HTTPServerRequest, HTTPServerResponse;
 	import std.algorithm : canFind;
 
 	// FIXME: close precreated sockets
@@ -55,7 +56,9 @@ export void initializeByVibeIndepenent() {
 		settings.bindAddresses = ips;
 		// TODO: ssl
 		// TODO: other settings
-		listenHTTP(settings, &handleRequest); // FIXME: UGH how to close once created?
+		listenHTTP(settings, (scope HTTPServerRequest req, scope HTTPServerResponse res) {
+			handleRequest(*config, req, res);
+		}); // FIXME: UGH how to close once created?
 	}
 
 	// module system preEventLoop call
@@ -65,12 +68,4 @@ export void initializeByVibeIndepenent() {
 
 	forceGCCleanup;
 	runEventLoop;
-}
-
-private {
-	import vibe.http.server : HTTPServerSettings, listenHTTP, HTTPServerRequest, HTTPServerResponse;
-
-	void handleRequest(scope HTTPServerRequest req, scope HTTPServerResponse res) {
-
-	}
 }
