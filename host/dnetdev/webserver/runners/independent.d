@@ -23,7 +23,7 @@
  */
 module dnetdev.webserver.runners.independent;
 
-export void initializeByVibeIndepenent() {
+export void initializeByVibeIndepenent(bool withEventLoop=true) {
 	import dnetdev.webserver.configs;
 	import dnetdev.webserver.runners.gc;
 	import vibe.core.core : runEventLoop;
@@ -67,5 +67,7 @@ export void initializeByVibeIndepenent() {
 	}
 
 	forceGCCleanup;
-	runEventLoop;
+
+	if (withEventLoop)
+		runEventLoop;
 }

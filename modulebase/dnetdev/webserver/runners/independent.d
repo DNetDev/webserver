@@ -27,4 +27,4 @@
 module dnetdev.webserver.runners.independent;
 import dnetdev.webserver.modulebase.internal.binder;
 
-void initializeByVibeIndepenent() { callViaHostBind; }
+void initializeByVibeIndepenent(bool withEventLoop=true) { callViaHostBind(withEventLoop); }
