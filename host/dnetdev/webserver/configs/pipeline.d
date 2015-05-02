@@ -28,7 +28,7 @@ import vibe.http.server : HTTPServerRequest, HTTPServerResponse;
 export void handleRequest(ServerConfigs config, scope HTTPServerRequest request, scope HTTPServerResponse response) {
 	VirtualHost* host;
 	VirtualDirectory protection;
-	string mimeType;
+	string* mimeType;
 
 	bool handled;
 

@@ -35,4 +35,4 @@ bool translate_name(ref ServerConfigs serverConfig, VirtualHost* theVirtualHost,
 void map_to_storage(ref ServerConfigs serverConfig, VirtualHost* theVirtualHost, ref VirtualDirectory protection, HTTPServerRequest theRequest);
 bool havePriviledges(ref ServerConfigs serverConfig, VirtualHost* theVirtualHost, ref VirtualDirectory protection, HTTPServerRequest theRequest);
 bool decideMime(ref ServerConfigs serverConfig, VirtualHost* theVirtualHost, ref VirtualDirectory protection, HTTPServerRequest theRequest, ref string mimeType);
-bool processRequest(ref ServerConfigs serverConfig, VirtualHost* theVirtualHost, ref VirtualDirectory protection, ref string mimeType, HTTPServerRequest theRequest, HTTPServerResponse theResponse);
+bool processRequest(ref ServerConfigs serverConfig, VirtualHost* theVirtualHost, ref VirtualDirectory protection, string* mimeType, HTTPServerRequest theRequest, HTTPServerResponse theResponse);

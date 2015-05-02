@@ -66,7 +66,7 @@ bool havePriviledges(ref ServerConfigs serverConfig, VirtualHost* theVirtualHost
  * The default mime type setting.
  * Based off of file extension.
  */
-bool decideMime(ref ServerConfigs serverConfig, VirtualHost* theVirtualHost, ref VirtualDirectory protection, HTTPServerRequest theRequest, ref string mimeType) {
+bool decideMime(ref ServerConfigs serverConfig, VirtualHost* theVirtualHost, ref VirtualDirectory protection, HTTPServerRequest theRequest, string* mimeType) {
 	// TODO
 
 	return false;
@@ -75,7 +75,7 @@ bool decideMime(ref ServerConfigs serverConfig, VirtualHost* theVirtualHost, ref
 /**
  * The default file handler.
  */
-bool processRequest(ref ServerConfigs serverConfig, VirtualHost* theVirtualHost, ref VirtualDirectory protection, ref string mimeType, HTTPServerRequest theRequest, HTTPServerResponse theResponse) {
+bool processRequest(ref ServerConfigs serverConfig, VirtualHost* theVirtualHost, ref VirtualDirectory protection, string* mimeType, HTTPServerRequest theRequest, HTTPServerResponse theResponse) {
 	// TODO
 
 	return false;

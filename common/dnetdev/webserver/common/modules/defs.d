@@ -53,7 +53,7 @@ struct WebServerModuleInterface {
 		bool function(ref ServerConfigs serverConfig, VirtualHost* theVirtualHost, HTTPServerRequest theRequest) translate_name;
 		void function(ref ServerConfigs serverConfig, VirtualHost* theVirtualHost, ref VirtualDirectory protection, HTTPServerRequest theRequest) map_to_storage;
 		bool function(ref ServerConfigs serverConfig, VirtualHost* theVirtualHost, ref VirtualDirectory protection, HTTPServerRequest theRequest) havePriviledges;
-		bool function(ref ServerConfigs serverConfig, VirtualHost* theVirtualHost, ref VirtualDirectory protection, HTTPServerRequest theRequest, ref string mimeType) decideMime;
-		bool function(ref ServerConfigs serverConfig, VirtualHost* theVirtualHost, ref VirtualDirectory protection, ref string mimeType, HTTPServerRequest theRequest, HTTPServerResponse theResponse) processRequest;
+		bool function(ref ServerConfigs serverConfig, VirtualHost* theVirtualHost, ref VirtualDirectory protection, HTTPServerRequest theRequest, string* mimeType) decideMime;
+		bool function(ref ServerConfigs serverConfig, VirtualHost* theVirtualHost, ref VirtualDirectory protection, string* mimeType, HTTPServerRequest theRequest, HTTPServerResponse theResponse) processRequest;
 	}
 }
