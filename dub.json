@@ -13,7 +13,7 @@
 			"targetType": "library",
 			"dependencies": {
     			"derelict-util": ">=1.9.1",
-				"vibe-d": ">=0.7.23-rc.2",
+				"vibe-d": "~master",
 				"apache_httpd_format": ">=0.1.1",
 				"daemonize": ">=0.1.0"
 			},

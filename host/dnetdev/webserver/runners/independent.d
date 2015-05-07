@@ -24,13 +24,22 @@
 module dnetdev.webserver.runners.independent;
 import dnetdev.webserver.configs;
 
+private __gshared {
+	import vibe.http.server : HTTPListener;
+	HTTPListener[] listeners;
+}
+
 export void initializeByVibeIndepenent(bool withEventLoop=true, ServerConfigs* config = null) {
 	import dnetdev.webserver.runners.gc;
 	import vibe.core.core : runEventLoop;
 	import vibe.http.server : HTTPServerSettings, listenHTTP, HTTPServerRequest, HTTPServerResponse;
 	import std.algorithm : canFind;
 
-	// FIXME: close precreated sockets
+	// close precreated sockets
+	foreach(listener; listeners) {
+		listener.stopListening();
+	}
+	listeners.length = 0;
 
 	// load config
 	if (config is null) {
@@ -52,15 +61,19 @@ export void initializeByVibeIndepenent(bool withEventLoop=true, ServerConfigs* c
 		}
 	}
 
+	listeners.length = portIps.keys.length;
+	size_t i;
 	foreach(port, ips; portIps) {
 		auto settings = new HTTPServerSettings;
 		settings.port = port;
 		settings.bindAddresses = ips;
 		// TODO: ssl
 		// TODO: other settings
-		listenHTTP(settings, (scope HTTPServerRequest req, scope HTTPServerResponse res) {
+		listeners[i] = listenHTTP(settings, (scope HTTPServerRequest req, scope HTTPServerResponse res) {
 			handleRequest(*config, req, res);
-		}); // FIXME: UGH how to close once created?
+		});
+
+		i++;
 	}
 
 	// module system preEventLoop call
