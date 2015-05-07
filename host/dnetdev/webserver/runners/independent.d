@@ -45,6 +45,7 @@ export void initializeByVibeIndepenent(bool withEventLoop=true, ServerConfigs* c
 	if (config is null) {
 		flattenConfig;
 		config = getSystemConfig();
+		mapToRuntimeConfig(config);
 	}
 
 	// get the ports + ip's we are hosting on

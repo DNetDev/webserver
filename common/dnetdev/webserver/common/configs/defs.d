@@ -81,6 +81,8 @@ struct ServerConfigs {
 	string[string] modulesToLoad;
 	
 	string[][string] otherDirectives;
+
+	RuntimeConfigMapping runtimeMappedConfig;
 	
 	package(dnetdev.webserver) {
 		import dnetdev.webserver.common.modules.defs;
@@ -99,5 +101,13 @@ struct ServerConfigs {
 }
 
 struct RuntimeConfigMapping {
+	import dnetdev.webserver.common.modules.defs : WebServerModuleInterface;
 
+	typeof(WebServerModuleInterface.translate_name)[] translate_name;
+	typeof(WebServerModuleInterface.map_to_storage)[] map_to_storage;
+	typeof(WebServerModuleInterface.havePriviledges)[] havePriviledges;
+	typeof(WebServerModuleInterface.decideMime)[] decideMime;
+	typeof(WebServerModuleInterface.processRequest)[] processRequest;
+
+	void*[string] moduleOthers;
 }

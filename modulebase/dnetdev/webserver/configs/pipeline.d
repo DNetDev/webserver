@@ -30,3 +30,4 @@ import vibe.http.server : HTTPServerRequest, HTTPServerResponse;
 import dnetdev.webserver.modulebase.internal.binder;
 
 void handleRequest(ServerConfigs config, scope HTTPServerRequest request, scope HTTPServerResponse response) { callViaHostBind(config, request, response); }
+void mapToRuntimeConfig(ServerConfigs config) { callViaHostBind(config, request, response); }

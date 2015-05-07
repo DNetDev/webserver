@@ -33,8 +33,8 @@ export void handleRequest(ServerConfigs config, scope HTTPServerRequest request,
 	bool handled;
 
 	handled = false;
-	foreach(mod; config.modules.range) {
-		if (mod.translate_name !is null && mod.translate_name(config, host, request)) {
+	foreach(func; config.runtimeMappedConfig.translate_name) {
+		if (func(config, host, request)) {
 			handled = true;
 			break;
 		}
@@ -44,14 +44,13 @@ export void handleRequest(ServerConfigs config, scope HTTPServerRequest request,
 		return;
 	}
 
-	foreach(mod; config.modules.range) {
-		if (mod.map_to_storage !is null)
-			mod.map_to_storage(config, host, protection, request);
+	foreach(func; config.runtimeMappedConfig.map_to_storage) {
+		func(config, host, protection, request);
 	}
 
 	handled = false;
-	foreach(mod; config.modules.range) {
-		if (mod.havePriviledges !is null && mod.havePriviledges(config, host, protection, request)) {
+	foreach(func; config.runtimeMappedConfig.havePriviledges) {
+		if (func(config, host, protection, request)) {
 			handled = true;
 			break;
 		}
@@ -62,8 +61,8 @@ export void handleRequest(ServerConfigs config, scope HTTPServerRequest request,
 	}
 
 	handled = false;
-	foreach(mod; config.modules.range) {
-		if (mod.decideMime !is null && mod.decideMime(config, host, protection, request, mimeType)) {
+	foreach(func; config.runtimeMappedConfig.decideMime) {
+		if (func(config, host, protection, request, mimeType)) {
 			handled = true;
 			break;
 		}
@@ -74,8 +73,8 @@ export void handleRequest(ServerConfigs config, scope HTTPServerRequest request,
 	}
 
 	handled = false;
-	foreach(mod; config.modules.range) {
-		if (mod.processRequest !is null && mod.processRequest(config, host, protection, mimeType, request, response)) {
+	foreach(func; config.runtimeMappedConfig.processRequest) {
+		if (func(config, host, protection, mimeType, request, response)) {
 			handled = true;
 			break;
 		}
@@ -83,5 +82,20 @@ export void handleRequest(ServerConfigs config, scope HTTPServerRequest request,
 	if (!handled) {
 		response.writeBody("unknown type handler", 404);
 		return;
+	}
+}
+
+export void mapToRuntimeConfig(ServerConfigs* config) {
+	foreach(mod; config.modules.range) {
+		if (mod.translate_name !is null)
+			config.runtimeMappedConfig.translate_name ~= mod.translate_name;
+		if (mod.map_to_storage !is null)
+			config.runtimeMappedConfig.map_to_storage ~= mod.map_to_storage;
+		if (mod.havePriviledges !is null)
+			config.runtimeMappedConfig.havePriviledges ~= mod.havePriviledges;
+		if (mod.decideMime !is null)
+			config.runtimeMappedConfig.decideMime ~= mod.decideMime;
+		if (mod.processRequest !is null)
+			config.runtimeMappedConfig.processRequest ~= mod.processRequest;
 	}
 }
