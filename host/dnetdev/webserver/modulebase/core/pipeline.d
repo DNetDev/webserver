@@ -71,12 +71,3 @@ bool decideMime(ref ServerConfigs serverConfig, VirtualHost* theVirtualHost, ref
 
 	return false;
 }
-
-/**
- * The default file handler.
- */
-bool processRequest(ref ServerConfigs serverConfig, VirtualHost* theVirtualHost, ref VirtualDirectory protection, string* mimeType, HTTPServerRequest theRequest, HTTPServerResponse theResponse) {
-	// TODO
-
-	return false;
-}
