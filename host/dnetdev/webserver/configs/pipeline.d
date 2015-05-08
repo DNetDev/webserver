@@ -80,8 +80,14 @@ export void handleRequest(ServerConfigs config, scope HTTPServerRequest request,
 		}
 	}
 	if (!handled) {
-		response.writeBody("unknown type handler", 404);
-		return;
+		version(WebServer_Default_MMFiles) {
+
+		} else /*version(WebServer_Dumb_FileServing)*/ {
+
+		}
+
+		if (!handled)
+			response.writeBody("unknown type handler", 404);
 	}
 }
 
