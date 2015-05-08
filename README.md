@@ -9,14 +9,14 @@ Required ASAP:
 
 1. version(WebServer_Dumb_FileServing)
 2. core module:
-	[ ] handleConfigDirectiveLoading
-	[ ] preConfigLoading
-	[ ] postConfigLoading
-	[ ] validConfig
-	[ ] translate_name
-	[ ] map_to_storage
-	[ ] havePriviledges
-	[ ] decideMime
+	1. handleConfigDirectiveLoading
+	2. preConfigLoading
+	3. postConfigLoading
+	4. validConfig
+	5. translate_name
+	6. map_to_storage
+	7. havePriviledges
+	8. decideMime
 
 Implement later:
 
